@@ -2,82 +2,54 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, TextInput} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {Button} from 'react-native-elements';
-import firestore from '@react-native-firebase/firestore';
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
-import {actionSaveNameGroup, actionsPathNameGroup} from '../actions/action';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import HomeAbsen from './HomeAbsen';
+import AbsenManually from './AbsenManually';
+import HasilkanPDF from './HasilkanPDF';
 const Home = () => {
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const [namegroup, setNamegroup] = useState('');
-  // db.collection('users').doc(id).get().then(snapshot => setUserDetails(snapshot.data()))
-  useEffect(() => {
-    const cekData = firestore()
-      .collection('server')
-      .doc('Im3cRGiZmrQEyunsObeE')
-      .get()
-      .then(snapshot => snapshot);
-    if (cekData) {
-      const dataPath = firestore()
-        .collection('server')
-        .doc('Im3cRGiZmrQEyunsObeE')
-        .collection().path;
-      dispatch(actionsPathNameGroup(dataPath));
-    }
-  }, []);
-  const buttonMakeGroup = () => {
-    firestore()
-      .collection('server')
-      .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(namegroup);
-    dispatch(actionSaveNameGroup(namegroup));
-    navigation.navigate('Absen');
-  };
-
+  const Tab = createBottomTabNavigator();
+  // pdffile1
+  // copy1
+  // profile
   return (
-    <View style={styles.containerInti}>
-      <View style={styles.container}>
-        <Text style={styles.textButton}>
-          Apakah anda ADMIN? hanya admin yg dapat mengisi Nama Grup Absen
-        </Text>
-        <View style={styles.containerInput}>
-          <TextInput
-            value={namegroup}
-            onChangeText={value => setNamegroup(value)}
-            style={styles.input}
-            placeholder="Masukkan Nama Grup Anda"
-            keyboardType="default"
-          />
-        </View>
-        <Button
-          onPress={buttonMakeGroup}
-          title="Buat Grup Absen"
-          containerStyle={styles.button}
-        />
-        <Button
-          onPress={() => navigation.navigate('Absen')}
-          title="Member Langsung ke List"
-          containerStyle={styles.button}
-        />
-      </View>
-      <View style={styles.buttonNavigation}>
-        <View style={styles.rumah}>
-          <Icon name="home" size={20} color="gray" />
-          <Text style={styles.textButton}>Rumah</Text>
-        </View>
-        <View style={styles.list}>
-          <Icon name="profile" size={20} color="gray" />
-          <Text style={styles.textButton}>List Manual</Text>
-        </View>
-        <View style={styles.pdf}>
-          <Icon name="pdffile1" size={20} color="gray" />
-          <Text style={styles.textButton}>HasilKan PDF</Text>
-        </View>
-      </View>
-    </View>
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: '#e91e63',
+      }}>
+      <Tab.Screen
+        name="Home"
+        component={HomeAbsen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="home" color={color} size={size} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Manually"
+        component={AbsenManually}
+        options={{
+          tabBarLabel: 'Absen Manual',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="copy1" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="render PDF"
+        component={HasilkanPDF}
+        options={{
+          tabBarLabel: 'Hasilkan PDF',
+          tabBarIcon: ({color, size}) => (
+            <Icon name="pdffile1" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 // adb shell input keyevent 82
@@ -87,12 +59,12 @@ const styles = StyleSheet.create({
   containerInti: {
     flex: 1,
   },
-  // container di atas Bottom NAV
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  // container di atas Bottom NAV
   textButton: {fontSize: 12, color: 'gray'},
   buttonNavigation: {
     width: '100%',
@@ -122,16 +94,4 @@ const styles = StyleSheet.create({
     bottom: 25,
     left: '40%',
   },
-  // khusus input dan tombol
-  containerInput: {
-    borderRadius: 20,
-    width: '80%',
-    marginBottom: 10,
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    borderColor: 'gray',
-    borderWidth: 1,
-  },
-  input: {height: 40, flex: 1, marginLeft: 10},
-  button: {width: '50%', margin: 10},
 });

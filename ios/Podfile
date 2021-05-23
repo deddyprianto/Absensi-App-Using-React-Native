@@ -12,6 +12,12 @@ target 'AbsensiPdf' do
     :hermes_enabled => false
   )
 
+  pod 'RNReactNativePdfLib', :path => '../node_modules/react-native-pdf-lib'
+
+  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+
+  pod 'react-native-html-to-pdf', :path => '../node_modules/react-native-html-to-pdf'
+
   target 'AbsensiPdfTests' do
     inherit! :complete
     # Pods for testing

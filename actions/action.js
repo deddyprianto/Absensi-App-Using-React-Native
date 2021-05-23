@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {DATA_SUCC, DATA_FAIL} from '../const/const';
-import {NAMA_GROUP, PATH_GROUP} from '../const/contsgroup';
+import {NAMA_GROUP, NAME_ABSEN} from '../const/contsgroup';
 
 export const actionLogin = userlogin => async dispatch => {
   try {
@@ -13,5 +13,5 @@ export const actionSaveNameGroup = namegroup => dispatch => {
   dispatch({type: NAMA_GROUP, payload: namegroup});
 };
 export const actionsPathNameGroup = pathgroup => dispatch => {
-  dispatch({type: PATH_GROUP, payload: pathgroup});
+  dispatch({type: NAME_ABSEN, payload: pathgroup});
 };

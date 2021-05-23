@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {DATA_SUCC, DATA_FAIL} from '../const/const';
-import {NAMA_GROUP, PATH_GROUP} from '../const/contsgroup';
+import {NAMA_GROUP, NAME_ABSEN} from '../const/contsgroup';
 
 export const loginReducer = (state = null, action) => {
   switch (action.type) {
@@ -22,7 +22,7 @@ export const saveNameGroup = (state = [], action) => {
 };
 export const saveNamePathGrouph = (state = [], action) => {
   switch (action.type) {
-    case PATH_GROUP:
+    case NAME_ABSEN:
       return {...state, path: action.payload};
     default:
       return state;

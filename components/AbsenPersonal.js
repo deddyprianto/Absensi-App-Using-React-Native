@@ -11,55 +11,56 @@ const AbsenPersonal = () => {
   const {group} = dataGroupName;
   const emailUser = useSelector(state => state.loginReducer);
   const {dataLogin} = emailUser;
-  const [changetoicon, setChangetoicon] = useState('Pilih');
   const [show, setShow] = useState(false);
   const [grup, setGrup] = useState('');
-  const [hadir, setHadir] = useState('Hadir');
-  const [sakit, setSakit] = useState('Sakit');
-  const [alpha, setAlpha] = useState('Alpha');
-  const [izin, setIzin] = useState('Izin');
-  // CEK KEADAAN USER MASUKKAN NAMA GRUP APA TIDAK
+  const [pilihhadir, setPilihhadir] = useState('Pilih');
+  const [pilihsakit, setPilihsakit] = useState('Pilih');
+  const [pilihizin, setPilihizin] = useState('Pilih');
+  const [pilihalpha, setPilihalpha] = useState('Pilih');
+  const hadir = 'hadir';
+  const sakit = 'sakit';
+  const izin = 'izin';
+  const alpha = 'alpha';
   const checkNameGrup = () => {
-    if (grup == group) {
-      alert(`Selamat datang di grup ${group}`);
-      setShow(true);
+    if (grup.length === 0) {
+      alert('masukkan nama Grup kamu');
     } else {
-      alert(`Nama Grup Tidak Cocok!`);
-      setShow(false);
+      setShow(true);
     }
   };
   const tombolHadir = () => {
-    setChangetoicon('Sudah');
+    setPilihhadir('Sudah');
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(group)
+      .collection(grup.length === 0 ? group : grup)
       .add({nama: dataLogin.displayName, status: hadir});
   };
   const tombolSakit = () => {
-    setChangetoicon('Sudah');
+    setPilihsakit('Sudah');
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(group)
+      .collection(grup.length === 0 ? group : grup)
       .add({nama: dataLogin.displayName, status: sakit});
   };
-  const tombolAlpha = () => {
-    setChangetoicon('Sudah');
-    firestore()
-      .collection('server')
-      .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(group)
-      .add({nama: dataLogin.displayName, status: alpha});
-  };
   const tombolIzin = () => {
-    setChangetoicon('Sudah');
+    setPilihizin('Sudah');
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(group)
+      .collection(grup.length === 0 ? group : grup)
       .add({nama: dataLogin.displayName, status: izin});
   };
+  const tombolAlpha = () => {
+    setPilihalpha('Sudah');
+    firestore()
+      .collection('server')
+      .doc('Im3cRGiZmrQEyunsObeE')
+      .collection(grup.length === 0 ? group : grup)
+      .add({nama: dataLogin.displayName, status: alpha});
+  };
+  // berhasil dan sukses penuh
   return (
     <View style={styles.container}>
       <Image
@@ -80,7 +81,11 @@ const AbsenPersonal = () => {
               keyboardType="default"
             />
           </View>
-          <Button title="Check" containerStyle={styles.button} />
+          <Button
+            title="Check"
+            onPress={checkNameGrup}
+            containerStyle={styles.button}
+          />
           {show && (
             <View>
               <Text style={styles.fontText}>Pilih Status Kehadiran Anda</Text>
@@ -89,25 +94,25 @@ const AbsenPersonal = () => {
                   <ListItem.Content>
                     <ListItem.Title>{hadir}</ListItem.Title>
                   </ListItem.Content>
-                  <Button title={changetoicon} onPress={tombolHadir} />
+                  <Button title={pilihhadir} onPress={tombolHadir} />
                 </ListItem>
                 <ListItem bottomDivider>
                   <ListItem.Content>
                     <ListItem.Title>{sakit}</ListItem.Title>
                   </ListItem.Content>
-                  <Button title={changetoicon} onPress={tombolSakit} />
+                  <Button title={pilihsakit} onPress={tombolSakit} />
                 </ListItem>
                 <ListItem bottomDivider>
                   <ListItem.Content>
                     <ListItem.Title>{izin}</ListItem.Title>
                   </ListItem.Content>
-                  <Button title={changetoicon} onPress={tombolIzin} />
+                  <Button title={pilihizin} onPress={tombolIzin} />
                 </ListItem>
                 <ListItem bottomDivider>
                   <ListItem.Content>
                     <ListItem.Title>{alpha}</ListItem.Title>
                   </ListItem.Content>
-                  <Button title={changetoicon} onPress={tombolAlpha} />
+                  <Button title={pilihalpha} onPress={tombolAlpha} />
                 </ListItem>
               </View>
             </View>
@@ -121,25 +126,25 @@ const AbsenPersonal = () => {
               <ListItem.Content>
                 <ListItem.Title>{hadir}</ListItem.Title>
               </ListItem.Content>
-              <Button title={changetoicon} onPress={tombolHadir} />
+              <Button title={pilihhadir} onPress={tombolHadir} />
             </ListItem>
             <ListItem bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>{sakit}</ListItem.Title>
               </ListItem.Content>
-              <Button title="pilih" onPress={tombolSakit} />
+              <Button title={pilihsakit} onPress={tombolSakit} />
             </ListItem>
             <ListItem bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>{izin}</ListItem.Title>
               </ListItem.Content>
-              <Button title="pilih" onPress={tombolIzin} />
+              <Button title={pilihizin} onPress={tombolIzin} />
             </ListItem>
             <ListItem bottomDivider>
               <ListItem.Content>
                 <ListItem.Title>{alpha}</ListItem.Title>
               </ListItem.Content>
-              <Button title="pilih" onPress={tombolAlpha} />
+              <Button title={pilihalpha} onPress={tombolAlpha} />
             </ListItem>
           </View>
         </View>

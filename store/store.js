@@ -9,7 +9,11 @@ import {
 const reducer = combineReducers({
   loginReducer: loginReducer,
   nameGroup: saveNameGroup,
-  pathGroup: saveNamePathGrouph,
+  nameAbsen: saveNamePathGrouph,
 });
+// for addMOB
+// npm install --save-dev jetifier
+// npx jetify
+// npx react-native run-android
 const store = createStore(reducer, applyMiddleware(thunk));
 export default store;
