@@ -11,22 +11,30 @@ import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Clipboard from '@react-native-clipboard/clipboard';
 import firestore from '@react-native-firebase/firestore';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {actionSaveNameGroup} from '../actions/action';
 import {useNavigation} from '@react-navigation/native';
 
 const HomeAbsen = () => {
   const navigation = useNavigation();
+  const emailUser = useSelector(state => state.loginReducer);
+  const {dataLogin} = emailUser;
   const dispatch = useDispatch();
   const [namegroup, setNamegroup] = useState('');
   const [copy, setCopy] = useState(false);
   const buttonMakeGroup = () => {
-    firestore()
-      .collection('server')
-      .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(namegroup);
-    dispatch(actionSaveNameGroup(namegroup));
-    navigation.navigate('Absen');
+    if (copy === false) {
+      alert(
+        `Hai ADMIN ${dataLogin.displayName} Pastikan kamu meng-copy nama grup. jika sudah share ke anggota mu!`,
+      );
+    } else {
+      firestore()
+        .collection('server')
+        .doc('Im3cRGiZmrQEyunsObeE')
+        .collection(namegroup);
+      dispatch(actionSaveNameGroup(namegroup));
+      navigation.navigate('Absen');
+    }
   };
   const copyToClipboard = () => {
     Clipboard.setString(namegroup);

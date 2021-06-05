@@ -12,6 +12,3 @@ export const actionLogin = userlogin => async dispatch => {
 export const actionSaveNameGroup = namegroup => dispatch => {
   dispatch({type: NAMA_GROUP, payload: namegroup});
 };
-export const actionsPathNameGroup = pathgroup => dispatch => {
-  dispatch({type: NAME_ABSEN, payload: pathgroup});
-};

@@ -20,11 +20,3 @@ export const saveNameGroup = (state = [], action) => {
       return state;
   }
 };
-export const saveNamePathGrouph = (state = [], action) => {
-  switch (action.type) {
-    case NAME_ABSEN:
-      return {...state, path: action.payload};
-    default:
-      return state;
-  }
-};

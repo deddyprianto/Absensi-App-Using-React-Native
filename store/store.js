@@ -4,12 +4,10 @@ import thunk from 'redux-thunk';
 import {
   loginReducer,
   saveNameGroup,
-  saveNamePathGrouph,
 } from '../reducer/reduce';
 const reducer = combineReducers({
   loginReducer: loginReducer,
   nameGroup: saveNameGroup,
-  nameAbsen: saveNamePathGrouph,
 });
 // for addMOB
 // npm install --save-dev jetifier

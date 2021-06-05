@@ -7,6 +7,7 @@ import Home from './components/Home';
 import {Provider} from 'react-redux';
 import store from './store/store';
 import AbsenPersonal from './components/AbsenPersonal';
+
 const App = () => {
   const Stack = createStackNavigator();
   const globalOption = {

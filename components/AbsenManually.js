@@ -9,14 +9,13 @@ import {
   ScrollView,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {useDispatch} from 'react-redux';
-import {actionsPathNameGroup} from '../actions/action';
+
 const AbsenManually = () => {
   const [namegroup, setNamegroup] = useState('');
   const [show, setShow] = useState(false);
   const [namalengkap, setNamalengkap] = useState('');
   const [kehadiran, setKehadiran] = useState('');
-  const dispatch = useDispatch();
+
   const buttonMakeGroup = () => {
     setShow(true);
   };
@@ -26,7 +25,6 @@ const AbsenManually = () => {
       .doc('Im3cRGiZmrQEyunsObeE')
       .collection(namegroup)
       .add({nama: namalengkap, status: kehadiran});
-    dispatch(actionsPathNameGroup(namegroup));
     setNamalengkap('');
     setKehadiran('');
     alert('berhasil');

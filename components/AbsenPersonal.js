@@ -63,6 +63,10 @@ const AbsenPersonal = () => {
   // berhasil dan sukses penuh
   return (
     <View style={styles.container}>
+      <Text style={styles.textPeringatan}>
+        Hai, {dataLogin.displayName} Pastikan nama GRUP harus sama!. Minta dan
+        Copy dari ADMIN yg membuat nama GRUP
+      </Text>
       <Image
         source={{
           uri: 'https://assets-a1.kompasiana.com/statics/crawl/55740ec40423bdb8468b4567.jpeg',
@@ -179,4 +183,5 @@ const styles = StyleSheet.create({
   input: {height: 40, flex: 1, marginLeft: 10},
   button: {width: '50%', alignSelf: 'center'},
   listKey: {width: '100%', marginTop: 20},
+  textPeringatan: {margin: 20},
 });
