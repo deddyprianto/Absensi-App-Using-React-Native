@@ -20,26 +20,24 @@ const HasilkanPDF = () => {
       .onSnapshot(snapshot =>
         setDatauser(snapshot.docs.map(doc => doc.data())),
       );
-    console.log(datauser);
     // /data/user/0/com.absensipdf/cache/absensi3780613586806435873.pdf
     // android:requestLegacyExternalStorage="true"
-    // let options = {
-    //   html: `
-    //   <h1>List ABSEN SMA PARDEDE</h1> <br>
-    //   <p>Tanggal ${tanggalHariIni}</p>
-    //     <table>
-    //       <tr>Namaa</tr>
-    //       <tr>Status Kehadiran</tr>
-    //       <td>
-    //       </td>
-    //     </table>
-    //   `,
-    //   fileName: 'absensi',
-    //   directory: 'Documents',
-    // };
-    // await RNHTMLtoPDF.convert(options);
-
-    // alert('file PDF telah dihasilkan, selamat menikmati');
+    let options = {
+      html: `
+      <h1>List ABSEN SMA PARDEDE</h1> <br>
+      <p>Tanggal ${tanggalHariIni}</p>
+        <table>
+          <tr>Namaa</tr>
+          <tr>Status Kehadiran</tr>
+          <td>
+          </td>
+        </table>
+      `,
+      fileName: 'absensi',
+      directory: 'Documents',
+    };
+    await RNHTMLtoPDF.convert(options);
+    alert('file PDF telah dihasilkan, selamat menikmati');
   };
 
   return (
