@@ -1,0 +1,2 @@
+export const DATA_STATUS_USER = 'DATA_STATUS_USER';
+export const DATA_STATUS_FAIL = 'DATA_STATUS_FAIL';

@@ -8,14 +8,10 @@ import {
 import {useDispatch} from 'react-redux';
 import {actionLogin} from '../actions/action';
 import auth from '@react-native-firebase/auth';
+
 const Login = ({navigation}) => {
+  // use Hook
   const dispatch = useDispatch();
-  function onAuthStateChanged(stateuser) {
-    if (stateuser != null) {
-      dispatch(actionLogin(stateuser));
-      navigation.replace('Home');
-    }
-  }
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleAlign: 'center',
@@ -27,6 +23,13 @@ const Login = ({navigation}) => {
     return unsubscriber;
   }, []);
 
+  // function
+  function onAuthStateChanged(stateuser) {
+    if (stateuser != null) {
+      dispatch(actionLogin(stateuser));
+      navigation.replace('Home');
+    }
+  }
   const buttonLogin = async () => {
     try {
       GoogleSignin.configure({

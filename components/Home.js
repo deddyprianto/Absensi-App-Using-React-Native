@@ -1,20 +1,29 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeAbsen from './HomeAbsen';
 import AbsenManually from './AbsenManually';
 import HasilkanPDF from './HasilkanPDF';
-const Home = () => {
+const Home = ({navigation}) => {
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitleAlign: 'center',
+      title: 'Home Screen',
+      headerStyle: {backgroundColor: '#3F8A83'},
+      headerTintColor: 'white',
+    });
+  }, []);
   const Tab = createBottomTabNavigator();
   // pdffile1
   // copy1
   // profile
   return (
     <Tab.Navigator
+      sceneContainerStyle={styles.containerScene}
       tabBarOptions={{
         activeTintColor: '#e91e63',
       }}>
@@ -65,6 +74,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   // container di atas Bottom NAV
+  containerScene: {
+    backgroundColor: '#3F8A83',
+    borderBottomLeftRadius: 200,
+  },
   textButton: {fontSize: 12, color: 'gray'},
   buttonNavigation: {
     width: '100%',

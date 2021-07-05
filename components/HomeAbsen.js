@@ -65,6 +65,7 @@ const HomeAbsen = () => {
         onPress={buttonMakeGroup}
         title="Buat Grup Absen"
         containerStyle={styles.button}
+        buttonStyle={styles.buttonStyl}
       />
       <Button
         onPress={() => navigation.navigate('Absen')}
@@ -78,11 +79,14 @@ const HomeAbsen = () => {
 export default HomeAbsen;
 
 const styles = StyleSheet.create({
-  // container di atas Bottom NAV
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  textButton: {
+    color: 'white',
+    textAlign: 'center',
   },
   // khusus input dan tombol
   containerInput: {
@@ -96,6 +100,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {height: 40, marginLeft: 10, width: '85%'},
-  button: {width: '50%', margin: 10},
   warnaCopy: {color: 'gray', fontSize: 12, fontStyle: 'italic'},
+  button: {
+    margin: 20,
+    width: '50%',
+  },
 });

@@ -7,7 +7,7 @@ import Home from './components/Home';
 import {Provider} from 'react-redux';
 import store from './store/store';
 import AbsenPersonal from './components/AbsenPersonal';
-
+import PageQuestion from './components/PageQuestion';
 const App = () => {
   const Stack = createStackNavigator();
   const globalOption = {
@@ -20,6 +20,7 @@ const App = () => {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Page Quetion" component={PageQuestion} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Absen" component={AbsenPersonal} />
         </Stack.Navigator>
