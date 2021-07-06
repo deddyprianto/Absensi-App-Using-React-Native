@@ -16,16 +16,23 @@ import {actionSaveNameGroup} from '../actions/action';
 import {useNavigation} from '@react-navigation/native';
 
 const HomeAbsen = () => {
+  // useHook
   const navigation = useNavigation();
   const emailUser = useSelector(state => state.loginReducer);
   const {dataLogin} = emailUser;
   const dispatch = useDispatch();
   const [namegroup, setNamegroup] = useState('');
   const [copy, setCopy] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // function
   const buttonMakeGroup = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
     if (copy === false) {
       alert(
-        `Hai ADMIN ${dataLogin.displayName} Pastikan kamu meng-copy nama grup. jika sudah share ke anggota mu!`,
+        `Gagal membuat grup, anda ${dataLogin.displayName} Belum meng-copy nama Grup. jika sudah share ke anggota`,
       );
     } else {
       firestore()
@@ -40,22 +47,21 @@ const HomeAbsen = () => {
     Clipboard.setString(namegroup);
     setCopy(true);
   };
+
+  // component
   return (
     <View style={styles.container}>
-      <Text style={styles.textButton}>
-        Apakah anda ADMIN? hanya admin yg dapat mengisi Nama Grup Absen
-      </Text>
+      <Text style={styles.textButton}>Masukkan Nama Absen</Text>
       <View style={styles.containerInput}>
         <TextInput
           value={namegroup}
           onChangeText={value => setNamegroup(value)}
           style={styles.input}
-          placeholder="Masukkan Nama Grup Anda"
           keyboardType="default"
         />
         <TouchableOpacity onPress={copyToClipboard}>
           {copy ? (
-            <Icon name="check" size={20} color="gray" />
+            <Icon name="check" size={20} color="green" />
           ) : (
             <Text style={styles.warnaCopy}>copy</Text>
           )}
@@ -66,11 +72,7 @@ const HomeAbsen = () => {
         title="Buat Grup Absen"
         containerStyle={styles.button}
         buttonStyle={styles.buttonStyl}
-      />
-      <Button
-        onPress={() => navigation.navigate('Absen')}
-        title="Member Langsung ke List"
-        containerStyle={styles.button}
+        loading={loading}
       />
     </View>
   );

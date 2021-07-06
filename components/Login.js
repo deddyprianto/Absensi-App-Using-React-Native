@@ -10,7 +10,7 @@ import {actionLogin} from '../actions/action';
 import auth from '@react-native-firebase/auth';
 
 const Login = ({navigation}) => {
-  // use Hook
+  // useHook
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,7 +27,7 @@ const Login = ({navigation}) => {
   function onAuthStateChanged(stateuser) {
     if (stateuser != null) {
       dispatch(actionLogin(stateuser));
-      navigation.replace('Home');
+      navigation.replace('PageQuestion');
     }
   }
   const buttonLogin = async () => {

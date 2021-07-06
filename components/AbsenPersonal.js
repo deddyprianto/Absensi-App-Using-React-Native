@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 import {ActivityIndicator} from 'react-native';
 import {Image, ListItem, Button} from 'react-native-elements';
@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
 
 const AbsenPersonal = () => {
+  // use Hook
   const dataGroupName = useSelector(state => state.nameGroup);
   const {group} = dataGroupName;
   const emailUser = useSelector(state => state.loginReducer);
@@ -17,10 +18,12 @@ const AbsenPersonal = () => {
   const [pilihsakit, setPilihsakit] = useState('Pilih');
   const [pilihizin, setPilihizin] = useState('Pilih');
   const [pilihalpha, setPilihalpha] = useState('Pilih');
+  // variable
   const hadir = 'hadir';
   const sakit = 'sakit';
   const izin = 'izin';
   const alpha = 'alpha';
+  // function
   const checkNameGrup = () => {
     if (grup.length === 0) {
       alert('masukkan nama Grup kamu');
@@ -60,13 +63,11 @@ const AbsenPersonal = () => {
       .collection(grup.length === 0 ? group : grup)
       .add({nama: dataLogin.displayName, status: alpha});
   };
-  // berhasil dan sukses penuh
+
+  // component
   return (
     <View style={styles.container}>
-      <Text style={styles.textPeringatan}>
-        Hai, {dataLogin.displayName} Pastikan nama GRUP harus sama!. Minta dan
-        Copy dari ADMIN yg membuat nama GRUP
-      </Text>
+      <Text style={styles.textPeringatan}>Hai, {dataLogin.displayName}</Text>
       <Image
         source={{
           uri: 'https://assets-a1.kompasiana.com/statics/crawl/55740ec40423bdb8468b4567.jpeg',
