@@ -18,22 +18,20 @@ import {useNavigation} from '@react-navigation/native';
 const HomeAbsen = () => {
   // useHook
   const navigation = useNavigation();
-  const emailUser = useSelector(state => state.loginReducer);
-  const {dataLogin} = emailUser;
+  const {userstatus} = useSelector(state => state.statusUser);
+  const {role} = userstatus;
   const dispatch = useDispatch();
   const [namegroup, setNamegroup] = useState('');
   const [copy, setCopy] = useState(false);
   const [loading, setLoading] = useState(false);
   // function
-  const buttonMakeGroup = () => {
+  const buttonMakeGroupAdmin = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
     if (copy === false) {
-      alert(
-        `Gagal membuat grup, anda ${dataLogin.displayName} Belum meng-copy nama Grup. jika sudah share ke anggota`,
-      );
+      alert(`Masukkan Nama Grup & Copy`);
     } else {
       firestore()
         .collection('server')
@@ -42,38 +40,69 @@ const HomeAbsen = () => {
       dispatch(actionSaveNameGroup(namegroup));
       navigation.navigate('Absen');
     }
+    setNamegroup('');
+  };
+  const buttonAnggota = () => {
+    firestore()
+      .collection('server')
+      .doc('Im3cRGiZmrQEyunsObeE')
+      .collection(namegroup);
+    dispatch(actionSaveNameGroup(namegroup));
+    navigation.navigate('Absen');
+    setNamegroup('');
   };
   const copyToClipboard = () => {
     Clipboard.setString(namegroup);
     setCopy(true);
   };
 
-  // component
   return (
     <View style={styles.container}>
-      <Text style={styles.textButton}>Masukkan Nama Absen</Text>
-      <View style={styles.containerInput}>
-        <TextInput
-          value={namegroup}
-          onChangeText={value => setNamegroup(value)}
-          style={styles.input}
-          keyboardType="default"
-        />
-        <TouchableOpacity onPress={copyToClipboard}>
-          {copy ? (
-            <Icon name="check" size={20} color="green" />
-          ) : (
-            <Text style={styles.warnaCopy}>copy</Text>
-          )}
-        </TouchableOpacity>
+      <View style={styles.containerContent}>
+        <Text style={styles.textButton}>Masukkan Nama Absen</Text>
+        {/* pengkondisian untuk input admin & anggota */}
+        {role === 'admin' ? (
+          <View style={styles.containerInput}>
+            <TextInput
+              value={namegroup}
+              onChangeText={value => setNamegroup(value)}
+              style={styles.input}
+              keyboardType="default"
+            />
+            <TouchableOpacity onPress={copyToClipboard}>
+              {copy ? (
+                <Icon name="check" size={20} color="green" />
+              ) : (
+                <Text style={styles.warnaCopy}>copy</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.containerInput}>
+            <TextInput
+              value={namegroup}
+              onChangeText={value => setNamegroup(value)}
+              style={styles.input}
+              keyboardType="default"
+            />
+          </View>
+        )}
+        {/* pengkondisian untuk Tombol ADMIN & Tombol Anggota */}
+        {role === 'admin' ? (
+          <Button
+            onPress={buttonMakeGroupAdmin}
+            title="Buat Grup ABSEN"
+            containerStyle={styles.button}
+            loading={loading}
+          />
+        ) : (
+          <Button
+            onPress={buttonAnggota}
+            title="Absen Sekarang"
+            containerStyle={styles.button}
+          />
+        )}
       </View>
-      <Button
-        onPress={buttonMakeGroup}
-        title="Buat Grup Absen"
-        containerStyle={styles.button}
-        buttonStyle={styles.buttonStyl}
-        loading={loading}
-      />
     </View>
   );
 };
@@ -82,7 +111,17 @@ export default HomeAbsen;
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
+    backgroundColor: '#120F10',
+  },
+  containerContent: {
+    backgroundColor: '#2C3545',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    height: '100%',
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -92,7 +131,7 @@ const styles = StyleSheet.create({
   },
   // khusus input dan tombol
   containerInput: {
-    borderRadius: 20,
+    borderRadius: 10,
     width: '80%',
     marginBottom: 10,
     flexDirection: 'row',
@@ -100,6 +139,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     alignItems: 'center',
+    elevation: 2,
   },
   input: {height: 40, marginLeft: 10, width: '85%'},
   warnaCopy: {color: 'gray', fontSize: 12, fontStyle: 'italic'},

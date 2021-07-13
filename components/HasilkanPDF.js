@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
-import {Button} from 'react-native-elements';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import firestore from '@react-native-firebase/firestore';
 import {FAB} from 'react-native-elements';
@@ -9,6 +8,8 @@ import {FAB} from 'react-native-elements';
 const HasilkanPDF = () => {
   const [datauser, setDatauser] = useState('');
   const [namegroup, setNamegroup] = useState('');
+  const [nameorganisasi, setNameOrganisasi] = useState('');
+  const [namealamat, setNameAlamat] = useState('');
   const tanggal = new Date();
   const tanggalHariIni = tanggal.toString();
   const [data, setData] = useState('');
@@ -77,8 +78,8 @@ const HasilkanPDF = () => {
       </head>  
       <body>
           <div style="width: 100%; text-align: center;">
-              <h1 style="background-color: #30BCC9; color: #fff; padding: 20px;">KBC FUTSAL</h1>
-              <h5 style="color: #30BCC9;">Jl. Kerja Bakti No.22, Pondok Cina, Kota Depok, Jawa Barat 16424</h5>
+              <h1 style="background-color: #30BCC9; color: #fff; padding: 20px;">${nameorganisasi}</h1>
+              <h5 style="color: #30BCC9;">${namealamat}</h5>
               <hr style="border-top: 2px solid #30BCC9;">
           </div>
           <h2 style="font-weight: bold;">Laporan Absensi ${namegroup} <sup class="badge badge-pill badge-info"
@@ -105,26 +106,50 @@ const HasilkanPDF = () => {
       directory: 'Download',
     };
     await RNHTMLtoPDF.convert(options);
+    setNamegroup('');
+    setNameOrganisasi('');
+    setNameAlamat('');
     alert('File PDF Tersimpan di Folder Download');
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.textButton}>Masukan nama GRUP ABSENSI ANDA</Text>
-      <View style={styles.containerInput}>
-        <TextInput
-          value={namegroup}
-          onChangeText={value => setNamegroup(value)}
-          style={styles.input}
-          placeholder="Masukkan Nama Grup Anda"
-          keyboardType="default"
+      <View style={styles.containerContent}>
+        <Text style={styles.textButton}>Form Ini Wajib di isi</Text>
+        <View style={styles.containerInput}>
+          <TextInput
+            value={namegroup}
+            onChangeText={value => setNamegroup(value)}
+            style={styles.input}
+            placeholder="Masukkan Nama Grup Anda"
+            keyboardType="default"
+          />
+        </View>
+        <View style={styles.containerInput}>
+          <TextInput
+            value={nameorganisasi}
+            onChangeText={value => setNameOrganisasi(value)}
+            style={styles.input}
+            placeholder="Nama Organisasi,instansi,perusahaan,dll"
+            keyboardType="default"
+          />
+        </View>
+        <View style={styles.containerInput}>
+          <TextInput
+            value={namealamat}
+            onChangeText={value => setNameAlamat(value)}
+            style={styles.input}
+            placeholder="Alamat"
+            keyboardType="default"
+          />
+        </View>
+        <FAB
+          placement="right"
+          title="Hasilkan PDF"
+          color="red"
+          onPress={generatePDF}
+          size="small"
         />
       </View>
-      <FAB
-        placement="right"
-        title="Hasilkan PDF"
-        color="red"
-        onPress={generatePDF}
-      />
     </View>
   );
 };
@@ -142,10 +167,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#120F10',
+  },
+  containerContent: {
+    backgroundColor: '#2C3545',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {width: '50%', margin: 20},
   containerInput: {
-    borderRadius: 20,
+    borderRadius: 10,
     width: '80%',
     marginBottom: 10,
     flexDirection: 'row',
@@ -153,6 +188,10 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     alignItems: 'center',
+    elevation: 10,
   },
-  input: {height: 40, marginLeft: 10, width: '85%'},
+  input: {height: 40, margin: 15, width: '85%'},
+  textButton: {
+    color: '#eaeaea',
+  },
 });

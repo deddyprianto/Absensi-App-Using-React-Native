@@ -3,35 +3,46 @@ import React, {useLayoutEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import {ListItem, Button} from 'react-native-elements';
+import {Button, CheckBox} from 'react-native-elements';
 import {actionSaveStatusUser} from '../actions/action';
+import HeaderStyle from './Member/HeaderStyle/HeaderStyle';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const PageQuestion = () => {
   // useHook
-  const [pilihAdmin, setPilihAdmin] = useState('pilih');
-  const [pilihAnggota, setPilihAnggota] = useState('pilih');
   const {dataLogin} = useSelector(state => state.loginReducer);
   const [stateRouteApp, setStateRouteApp] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [checkedAdmin, setCheckedAdmin] = useState(false);
+  const [checkedAnggota, setCheckedAnggota] = useState(false);
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitleAlign: 'center',
-      title: 'Home Screen',
-      headerStyle: {backgroundColor: '#3F8A83'},
-      headerTintColor: 'white',
+      header: ({scene}) => {
+        const {options} = scene.descriptor;
+        const title =
+          options.headerTitle !== undefined
+            ? options.headerTitle !== undefined
+            : options.title !== undefined
+            ? options.title
+            : scene.route.name;
+        return <HeaderStyle title={title} />;
+      },
     });
   }, [navigation]);
   // variable
   const admin = 'admin';
   const anggota = 'anggota';
+  const dotCircleO = <Icon name="dot-circle-o" color="#A9D08E" size={25} />;
+  const circleO = <Icon name="circle-o" color="#eaeaea" size={25} />;
   // function
   const tombolAdmin = () => {
-    setPilihAdmin('saya admin');
+    setCheckedAdmin(true);
     dispatch(actionSaveStatusUser({nama: dataLogin.displayName, role: admin}));
     setStateRouteApp(admin);
   };
   const tombolAnggota = () => {
-    setPilihAnggota('saya anggota');
+    setCheckedAnggota(true);
     dispatch(
       actionSaveStatusUser({nama: dataLogin.displayName, role: anggota}),
     );
@@ -41,31 +52,38 @@ const PageQuestion = () => {
   // component
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.containerContent}>
         <Text style={styles.fontText}>
           Haloo, {dataLogin.displayName} Pilih Role Kamu
         </Text>
-        <View>
-          <ListItem bottomDivider containerStyle={styles.listKey}>
-            <ListItem.Content>
-              <ListItem.Title>{admin}</ListItem.Title>
-            </ListItem.Content>
-            <Button title={pilihAdmin} onPress={tombolAdmin} />
-          </ListItem>
-          <ListItem bottomDivider>
-            <ListItem.Content>
-              <ListItem.Title>{anggota}</ListItem.Title>
-            </ListItem.Content>
-            <Button title={pilihAnggota} onPress={tombolAnggota} />
-          </ListItem>
-        </View>
+        <CheckBox
+          center
+          title="Saya Admin"
+          checkedIcon={dotCircleO}
+          uncheckedIcon={circleO}
+          onPress={tombolAdmin}
+          checked={checkedAdmin}
+          containerStyle={styles.checkBox}
+          textStyle={{color: '#eaeaea'}}
+          uncheckedColor="white"
+        />
+        <CheckBox
+          center
+          title="Saya Anggota"
+          checkedIcon={dotCircleO}
+          uncheckedIcon={circleO}
+          onPress={tombolAnggota}
+          checked={checkedAnggota}
+          containerStyle={styles.checkBox}
+          textStyle={{color: '#eaeaea'}}
+          uncheckedColor="white"
+        />
+        <Button
+          title="Next"
+          onPress={() => navigation.replace(stateRouteApp)}
+          containerStyle={styles.button}
+        />
       </View>
-      <Button
-        title="Next"
-        type="outline"
-        onPress={() => navigation.replace(stateRouteApp)}
-        containerStyle={styles.button}
-      />
     </View>
   );
 };
@@ -74,11 +92,28 @@ export default PageQuestion;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#030E21',
+  },
+  containerContent: {
+    backgroundColor: '#2C3545',
+    height: '100%',
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
   },
-  fontText: {fontSize: 20, margin: 30},
+
+  checkBox: {
+    width: '70%',
+    backgroundColor: 'transparent',
+  },
+  listKey: {
+    margin: 10,
+    borderRadius: 20,
+    backgroundColor: '#eaeaea',
+    width: '80%',
+  },
+  fontText: {fontSize: 20, margin: 30, marginTop: 70, color: 'white'},
   button: {
     width: '50%',
     marginTop: 50,

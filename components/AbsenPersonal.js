@@ -1,23 +1,40 @@
 /* eslint-disable prettier/prettier */
 import React, {useState, useLayoutEffect} from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
-import {ActivityIndicator} from 'react-native';
-import {Image, ListItem, Button} from 'react-native-elements';
+import {CheckBox, Button} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
+import {useNavigation} from '@react-navigation/native';
+import HeaderStyle from './Member/HeaderStyle/HeaderStyle';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const AbsenPersonal = () => {
   // use Hook
+  const navigation = useNavigation();
   const dataGroupName = useSelector(state => state.nameGroup);
   const {group} = dataGroupName;
   const emailUser = useSelector(state => state.loginReducer);
   const {dataLogin} = emailUser;
   const [show, setShow] = useState(false);
   const [grup, setGrup] = useState('');
-  const [pilihhadir, setPilihhadir] = useState('Pilih');
-  const [pilihsakit, setPilihsakit] = useState('Pilih');
-  const [pilihizin, setPilihizin] = useState('Pilih');
-  const [pilihalpha, setPilihalpha] = useState('Pilih');
+  const [checkHadir, setCheckHadir] = useState(false);
+  const [checkSakit, setCheckSakit] = useState(false);
+  const [checkIzin, setCheckIzin] = useState(false);
+  const [checkAlpha, setCheckAlpha] = useState(false);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      header: ({scene}) => {
+        const {options} = scene.descriptor;
+        const title =
+          options.headerTitle !== undefined
+            ? options.headerTitle !== undefined
+            : options.title !== undefined
+            ? options.title
+            : scene.route.name;
+        return <HeaderStyle title={title} />;
+      },
+    });
+  }, [navigation]);
   // variable
   const hadir = 'hadir';
   const sakit = 'sakit';
@@ -32,128 +49,174 @@ const AbsenPersonal = () => {
     }
   };
   const tombolHadir = () => {
-    setPilihhadir('Sudah');
+    setCheckHadir(true);
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
       .collection(grup.length === 0 ? group : grup)
       .add({nama: dataLogin.displayName, status: hadir});
+    alert('berhasil, status kamu Hadir');
   };
   const tombolSakit = () => {
-    setPilihsakit('Sudah');
+    setCheckSakit(true);
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
       .collection(grup.length === 0 ? group : grup)
       .add({nama: dataLogin.displayName, status: sakit});
+    alert('berhasil, status kamu Sakit');
   };
   const tombolIzin = () => {
-    setPilihizin('Sudah');
+    setCheckIzin(true);
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
       .collection(grup.length === 0 ? group : grup)
       .add({nama: dataLogin.displayName, status: izin});
+    alert('berhasil, status kamu Izin');
   };
   const tombolAlpha = () => {
-    setPilihalpha('Sudah');
+    setCheckAlpha(true);
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
       .collection(grup.length === 0 ? group : grup)
       .add({nama: dataLogin.displayName, status: alpha});
+    alert('berhasil, status kamu Alpha');
   };
-
+  // value
+  const circleO = <Icon name="circle-o" color="#eaeaea" size={25} />;
+  const dotCircleOHadir = (
+    <Icon name="dot-circle-o" color="#A9D08E" size={25} />
+  );
+  const dotCircleOSakit = (
+    <Icon name="dot-circle-o" color="#00B0F0" size={25} />
+  );
+  const dotCircleOIzin = <Icon name="dot-circle-o" color="#FFD966" size={25} />;
+  const dotCircleOAlpha = (
+    <Icon name="dot-circle-o" color="#FF5050" size={25} />
+  );
   // component
   return (
     <View style={styles.container}>
-      <Text style={styles.textPeringatan}>Hai, {dataLogin.displayName}</Text>
-      <Image
-        source={{
-          uri: 'https://assets-a1.kompasiana.com/statics/crawl/55740ec40423bdb8468b4567.jpeg',
-        }}
-        style={{width: 200, height: 200}}
-        PlaceholderContent={<ActivityIndicator />}
-      />
-      {!group ? (
-        <View>
-          <View style={styles.containerInput}>
-            <TextInput
-              value={grup}
-              onChangeText={value => setGrup(value)}
-              style={styles.input}
-              placeholder="Masukkan Nama Grup"
-              keyboardType="default"
+      <View style={styles.containerContent}>
+        <Text style={styles.textPeringatan}>Halo, {dataLogin.displayName}</Text>
+        {!group ? (
+          <View style={styles.containerCheckBox}>
+            <View style={styles.containerInput}>
+              <TextInput
+                value={grup}
+                onChangeText={value => setGrup(value)}
+                style={styles.input}
+                placeholder="Masukkan Nama Grup yg anda buat tadi"
+                keyboardType="default"
+              />
+            </View>
+            <Button
+              title="Check"
+              onPress={checkNameGrup}
+              containerStyle={styles.button}
+            />
+            {show && (
+              <View>
+                <Text style={styles.fontText}>Pilih Kehadiran Anda</Text>
+                <CheckBox
+                  center
+                  title="Saya Hadir"
+                  checkedIcon={dotCircleOHadir}
+                  uncheckedIcon={circleO}
+                  onPress={tombolHadir}
+                  checked={checkHadir}
+                  containerStyle={styles.checkBox}
+                  textStyle={{color: '#eaeaea'}}
+                  uncheckedColor="white"
+                />
+                <CheckBox
+                  center
+                  title="Saya Sakit"
+                  checkedIcon={dotCircleOSakit}
+                  uncheckedIcon={circleO}
+                  onPress={tombolSakit}
+                  checked={checkSakit}
+                  containerStyle={styles.checkBox}
+                  textStyle={{color: '#eaeaea'}}
+                  uncheckedColor="white"
+                />
+                <CheckBox
+                  center
+                  title="Saya Izin"
+                  checkedIcon={dotCircleOIzin}
+                  uncheckedIcon={circleO}
+                  onPress={tombolIzin}
+                  checked={checkIzin}
+                  containerStyle={styles.checkBox}
+                  textStyle={{color: '#eaeaea'}}
+                  uncheckedColor="white"
+                />
+                <CheckBox
+                  center
+                  title="Saya Alpha"
+                  checkedIcon={dotCircleOAlpha}
+                  uncheckedIcon={circleO}
+                  onPress={tombolAlpha}
+                  checked={checkAlpha}
+                  containerStyle={styles.checkBox}
+                  textStyle={{color: '#eaeaea'}}
+                  uncheckedColor="white"
+                />
+              </View>
+            )}
+          </View>
+        ) : (
+          <View style={styles.containerCheckBox}>
+            <Text style={styles.fontText}>Pilih Kehadiran Anda</Text>
+            <CheckBox
+              center
+              title="Saya Hadir"
+              checkedIcon={dotCircleOHadir}
+              uncheckedIcon={circleO}
+              onPress={tombolHadir}
+              checked={checkHadir}
+              containerStyle={styles.checkBox}
+              textStyle={{color: '#eaeaea'}}
+              uncheckedColor="white"
+            />
+            <CheckBox
+              center
+              title="Saya Sakit"
+              checkedIcon={dotCircleOSakit}
+              uncheckedIcon={circleO}
+              onPress={tombolSakit}
+              checked={checkSakit}
+              containerStyle={styles.checkBox}
+              textStyle={{color: '#eaeaea'}}
+              uncheckedColor="white"
+            />
+            <CheckBox
+              center
+              title="Saya Izin"
+              checkedIcon={dotCircleOIzin}
+              uncheckedIcon={circleO}
+              onPress={tombolIzin}
+              checked={checkIzin}
+              containerStyle={styles.checkBox}
+              textStyle={{color: '#eaeaea'}}
+              uncheckedColor="white"
+            />
+            <CheckBox
+              center
+              title="Saya Alpha"
+              checkedIcon={dotCircleOAlpha}
+              uncheckedIcon={circleO}
+              onPress={tombolAlpha}
+              checked={checkAlpha}
+              containerStyle={styles.checkBox}
+              textStyle={{color: '#eaeaea'}}
+              uncheckedColor="white"
             />
           </View>
-          <Button
-            title="Check"
-            onPress={checkNameGrup}
-            containerStyle={styles.button}
-          />
-          {show && (
-            <View>
-              <Text style={styles.fontText}>Pilih Status Kehadiran Anda</Text>
-              <View>
-                <ListItem bottomDivider containerStyle={styles.listKey}>
-                  <ListItem.Content>
-                    <ListItem.Title>{hadir}</ListItem.Title>
-                  </ListItem.Content>
-                  <Button title={pilihhadir} onPress={tombolHadir} />
-                </ListItem>
-                <ListItem bottomDivider>
-                  <ListItem.Content>
-                    <ListItem.Title>{sakit}</ListItem.Title>
-                  </ListItem.Content>
-                  <Button title={pilihsakit} onPress={tombolSakit} />
-                </ListItem>
-                <ListItem bottomDivider>
-                  <ListItem.Content>
-                    <ListItem.Title>{izin}</ListItem.Title>
-                  </ListItem.Content>
-                  <Button title={pilihizin} onPress={tombolIzin} />
-                </ListItem>
-                <ListItem bottomDivider>
-                  <ListItem.Content>
-                    <ListItem.Title>{alpha}</ListItem.Title>
-                  </ListItem.Content>
-                  <Button title={pilihalpha} onPress={tombolAlpha} />
-                </ListItem>
-              </View>
-            </View>
-          )}
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.fontText}>Pilih Status Kehadiran Anda</Text>
-          <View>
-            <ListItem bottomDivider containerStyle={styles.listKey}>
-              <ListItem.Content>
-                <ListItem.Title>{hadir}</ListItem.Title>
-              </ListItem.Content>
-              <Button title={pilihhadir} onPress={tombolHadir} />
-            </ListItem>
-            <ListItem bottomDivider>
-              <ListItem.Content>
-                <ListItem.Title>{sakit}</ListItem.Title>
-              </ListItem.Content>
-              <Button title={pilihsakit} onPress={tombolSakit} />
-            </ListItem>
-            <ListItem bottomDivider>
-              <ListItem.Content>
-                <ListItem.Title>{izin}</ListItem.Title>
-              </ListItem.Content>
-              <Button title={pilihizin} onPress={tombolIzin} />
-            </ListItem>
-            <ListItem bottomDivider>
-              <ListItem.Content>
-                <ListItem.Title>{alpha}</ListItem.Title>
-              </ListItem.Content>
-              <Button title={pilihalpha} onPress={tombolAlpha} />
-            </ListItem>
-          </View>
-        </View>
-      )}
+        )}
+      </View>
     </View>
   );
 };
@@ -161,17 +224,22 @@ const AbsenPersonal = () => {
 export default AbsenPersonal;
 
 const styles = StyleSheet.create({
-  container: {justifyContent: 'center', alignItems: 'center', flex: 1},
-  fontText: {fontSize: 20},
-  colorHadirCheckBox: {
-    color: 'green',
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    backgroundColor: '#120F10',
   },
-  colorSakitCheckBox: {
-    color: 'yellow',
+  containerContent: {
+    backgroundColor: '#2C3545',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  colorAlphaCheckBox: {
-    color: 'red',
-  },
+  fontText: {fontSize: 12, color: '#eaeaea'},
   containerInput: {
     borderRadius: 20,
     width: '80%',
@@ -184,5 +252,13 @@ const styles = StyleSheet.create({
   input: {height: 40, flex: 1, marginLeft: 10},
   button: {width: '50%', alignSelf: 'center'},
   listKey: {width: '100%', marginTop: 20},
-  textPeringatan: {margin: 20},
+  textPeringatan: {margin: 20, color: '#eaeaea'},
+  containerCheckBox: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  checkBox: {
+    width: '70%',
+    backgroundColor: 'transparent',
+  },
 });
