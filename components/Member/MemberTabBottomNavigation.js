@@ -31,7 +31,7 @@ const MemberTabBottomNavigation = ({navigation}) => {
   // component
   return (
     <Tab.Navigator
-      barStyle={{backgroundColor: '#030E21'}}
+      barStyle={{backgroundColor: '#353f4e'}}
       tabBarOptions={{
         activeTintColor: '#e91e63',
       }}>
@@ -39,7 +39,7 @@ const MemberTabBottomNavigation = ({navigation}) => {
         name="Absen Sekarang"
         component={HowToUse}
         options={{
-          tabBarLabel: 'Haloo',
+          tabBarLabel: 'Berita Info',
           tabBarIcon: ({color, size}) => (
             <Icon name="smileo" color={color} size={size} />
           ),

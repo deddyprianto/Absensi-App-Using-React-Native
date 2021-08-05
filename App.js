@@ -3,12 +3,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './components/Login';
 import {Provider} from 'react-redux';
-import store from './store/store';
 import AbsenPersonal from './components/AbsenPersonal';
 import PageQuestion from './components/PageQuestion';
 import AdminTabBottomNavigation from './components/Admin/AdminTabBottomNavigation';
 import MemberTabBottomNavigation from './components/Member/MemberTabBottomNavigation';
 import SplashScreen from './components/SplashScreen';
+import {store} from './app/store';
+
 const App = () => {
   const Stack = createStackNavigator();
 

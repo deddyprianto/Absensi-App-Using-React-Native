@@ -12,14 +12,13 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import Clipboard from '@react-native-clipboard/clipboard';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
-import {actionSaveNameGroup} from '../actions/action';
 import {useNavigation} from '@react-navigation/native';
+import {saveNameGroup} from '../features/appSlice';
 
 const HomeAbsen = () => {
   // useHook
   const navigation = useNavigation();
-  const {userstatus} = useSelector(state => state.statusUser);
-  const {role} = userstatus;
+  const {role} = useSelector(state => state.appstate.statusUser);
   const dispatch = useDispatch();
   const [namegroup, setNamegroup] = useState('');
   const [copy, setCopy] = useState(false);
@@ -31,13 +30,13 @@ const HomeAbsen = () => {
       setLoading(false);
     }, 2000);
     if (copy === false) {
-      alert(`Masukkan Nama Grup & Copy`);
+      alert(`Copy Nama Grup Terlebih dahulu`);
     } else {
       firestore()
         .collection('server')
         .doc('Im3cRGiZmrQEyunsObeE')
         .collection(namegroup);
-      dispatch(actionSaveNameGroup(namegroup));
+      dispatch(saveNameGroup({name: namegroup}));
       navigation.navigate('Absen');
     }
     setNamegroup('');
@@ -47,7 +46,7 @@ const HomeAbsen = () => {
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
       .collection(namegroup);
-    dispatch(actionSaveNameGroup(namegroup));
+    dispatch(saveNameGroup({name: namegroup}));
     navigation.navigate('Absen');
     setNamegroup('');
   };
@@ -84,6 +83,7 @@ const HomeAbsen = () => {
               onChangeText={value => setNamegroup(value)}
               style={styles.input}
               keyboardType="default"
+              placeholder="Minta nama Grup ke ADMIN"
             />
           </View>
         )}
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textButton: {
+    marginBottom: 20,
     color: 'white',
     textAlign: 'center',
   },

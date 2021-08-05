@@ -6,9 +6,9 @@ import {
   GoogleSignin,
 } from '@react-native-google-signin/google-signin';
 import {useDispatch} from 'react-redux';
-import {actionLogin} from '../actions/action';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
+import {actionLogin} from '../features/appSlice';
 
 const Login = () => {
   // useHook
@@ -23,7 +23,14 @@ const Login = () => {
   // function
   function onAuthStateChanged(stateuser) {
     if (stateuser != null) {
-      dispatch(actionLogin(stateuser));
+      const {displayName, email, photoURL} = stateuser;
+      dispatch(
+        actionLogin({
+          displayName: displayName,
+          email: email,
+          photoURL: photoURL,
+        }),
+      );
       navigation.replace('PageQuestion');
     }
   }
@@ -53,7 +60,12 @@ const Login = () => {
       </View>
 
       <View style={styles.main}>
-        <Text style={styles.text}>Login Menggunakan Gmail</Text>
+        <Text style={styles.text}>
+          Selamat datang di aplikasi Absensi Convert To PDF
+        </Text>
+        <Text style={styles.textLoginGmail}>
+          Silahkan Login Menggunakan Gmail
+        </Text>
         <GoogleSigninButton
           style={styles.styleButtonGoole}
           size={GoogleSigninButton.Size.Wide}
@@ -84,6 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#2C3545',
   },
-  text: {marginBottom: 40, color: '#eaeaea'},
+  text: {margin: 20, color: '#eaeaea', fontSize: 30},
   styleButtonGoole: {width: 192, height: 48},
+  textLoginGmail: {color: '#eaeaea', margin: 20},
 });

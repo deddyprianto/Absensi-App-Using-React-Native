@@ -21,6 +21,8 @@ target 'AbsensiPdf' do
   pod 'RNPDF', :path => '../node_modules/react-native-view-pdf'
 
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'AbsensiPdfTests' do
     inherit! :complete
     # Pods for testing

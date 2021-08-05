@@ -1,15 +1,15 @@
 /* eslint-disable prettier/prettier */
 import React, {useLayoutEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, StatusBar} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button, CheckBox} from 'react-native-elements';
-import {actionSaveStatusUser} from '../actions/action';
 import HeaderStyle from './Member/HeaderStyle/HeaderStyle';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {saveStatusUser} from '../features/appSlice';
 const PageQuestion = () => {
   // useHook
-  const {dataLogin} = useSelector(state => state.loginReducer);
+  const {displayName} = useSelector(state => state.appstate.dataLogin);
   const [stateRouteApp, setStateRouteApp] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -38,23 +38,22 @@ const PageQuestion = () => {
   // function
   const tombolAdmin = () => {
     setCheckedAdmin(true);
-    dispatch(actionSaveStatusUser({nama: dataLogin.displayName, role: admin}));
+    dispatch(saveStatusUser({nama: displayName, role: admin}));
     setStateRouteApp(admin);
   };
   const tombolAnggota = () => {
     setCheckedAnggota(true);
-    dispatch(
-      actionSaveStatusUser({nama: dataLogin.displayName, role: anggota}),
-    );
+    dispatch(saveStatusUser({nama: displayName, role: anggota}));
     setStateRouteApp(anggota);
   };
 
   // component
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#2C3545" />
       <View style={styles.containerContent}>
         <Text style={styles.fontText}>
-          Haloo, {dataLogin.displayName} Pilih Role Kamu
+          Haloo, {displayName} Pilih Role Kamu
         </Text>
         <CheckBox
           center

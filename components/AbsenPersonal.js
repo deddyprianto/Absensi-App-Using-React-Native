@@ -11,10 +11,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const AbsenPersonal = () => {
   // use Hook
   const navigation = useNavigation();
-  const dataGroupName = useSelector(state => state.nameGroup);
-  const {group} = dataGroupName;
-  const emailUser = useSelector(state => state.loginReducer);
-  const {dataLogin} = emailUser;
+  const group = useSelector(state => state.appstate.nameGroup);
+  const {displayName} = useSelector(state => state.appstate.dataLogin);
   const [show, setShow] = useState(false);
   const [grup, setGrup] = useState('');
   const [checkHadir, setCheckHadir] = useState(false);
@@ -53,8 +51,8 @@ const AbsenPersonal = () => {
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(grup.length === 0 ? group : grup)
-      .add({nama: dataLogin.displayName, status: hadir});
+      .collection(grup.length === 0 ? group?.name : grup)
+      .add({nama: displayName, status: hadir});
     alert('berhasil, status kamu Hadir');
   };
   const tombolSakit = () => {
@@ -62,8 +60,8 @@ const AbsenPersonal = () => {
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(grup.length === 0 ? group : grup)
-      .add({nama: dataLogin.displayName, status: sakit});
+      .collection(grup.length === 0 ? group?.name : grup)
+      .add({nama: displayName, status: sakit});
     alert('berhasil, status kamu Sakit');
   };
   const tombolIzin = () => {
@@ -71,8 +69,8 @@ const AbsenPersonal = () => {
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(grup.length === 0 ? group : grup)
-      .add({nama: dataLogin.displayName, status: izin});
+      .collection(grup.length === 0 ? group?.name : grup)
+      .add({nama: displayName, status: izin});
     alert('berhasil, status kamu Izin');
   };
   const tombolAlpha = () => {
@@ -80,8 +78,8 @@ const AbsenPersonal = () => {
     firestore()
       .collection('server')
       .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(grup.length === 0 ? group : grup)
-      .add({nama: dataLogin.displayName, status: alpha});
+      .collection(grup.length === 0 ? group?.name : grup)
+      .add({nama: displayName, status: alpha});
     alert('berhasil, status kamu Alpha');
   };
   // value
@@ -100,8 +98,8 @@ const AbsenPersonal = () => {
   return (
     <View style={styles.container}>
       <View style={styles.containerContent}>
-        <Text style={styles.textPeringatan}>Halo, {dataLogin.displayName}</Text>
-        {!group ? (
+        <Text style={styles.textPeringatan}>Halo, {displayName}</Text>
+        {!group?.name ? (
           <View style={styles.containerCheckBox}>
             <View style={styles.containerInput}>
               <TextInput

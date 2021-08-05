@@ -1,15 +1,16 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {StyleSheet, Text, View, ImageBackground} from 'react-native';
+import {StyleSheet, Text, View, StatusBar} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 const HeaderStyle = ({title, myStyle}) => {
-  // hooks
-  const {dataLogin} = useSelector(state => state.loginReducer);
-  const {userstatus} = useSelector(state => state.statusUser);
-  const {role} = userstatus;
+  const {photoURL, displayName, email} = useSelector(
+    state => state.appstate.dataLogin,
+  );
+  const {role} = useSelector(state => state.appstate.statusUser);
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#030E21" />
       <Text style={styles.textJudul}>{`Halaman ${title}`}</Text>
       <View style={styles.card}>
         <Avatar
@@ -17,20 +18,20 @@ const HeaderStyle = ({title, myStyle}) => {
           size="large"
           rounded
           source={{
-            uri: dataLogin.photoURL,
+            uri: photoURL,
           }}
         />
         {role === 'admin' ? (
           <>
-            <Text style={styles.text}>{`Nama: ${dataLogin.displayName}`}</Text>
+            <Text style={styles.text}>{`Nama: ${displayName}`}</Text>
             <Text style={styles.text}>Status: Admin</Text>
-            <Text style={styles.textEmail}>{`Email: ${dataLogin.email}`}</Text>
+            <Text style={styles.textEmail}>{`Email: ${email}`}</Text>
           </>
         ) : (
           <>
-            <Text style={styles.text}>{`Nama: ${dataLogin.displayName}`}</Text>
+            <Text style={styles.text}>{`Nama: ${displayName}`}</Text>
             <Text style={styles.text}>Status: Anggota</Text>
-            <Text style={styles.textEmail}>{`Email: ${dataLogin.email}`}</Text>
+            <Text style={styles.textEmail}>{`Email: ${email}`}</Text>
           </>
         )}
       </View>

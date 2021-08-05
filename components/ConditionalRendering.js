@@ -10,7 +10,6 @@ const ConditionalRendering = () => {
   const {userstatus} = useSelector(state => state.statusUser);
   const {role} = userstatus;
 
-  // component
   return (
     <View>
       {userstatus === null ? (

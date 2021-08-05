@@ -1,19 +1,17 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
-import React, {useLayoutEffect, useState} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import React, {useLayoutEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import HomeAbsen from '../HomeAbsen';
 import AbsenManually from '../AbsenManually';
 import HasilkanPDF from '../HasilkanPDF';
-import {useSelector} from 'react-redux';
 import HeaderStyle from '../Member/HeaderStyle/HeaderStyle';
+
 const AdminTabBottomNavigation = ({navigation}) => {
   // useHook
-  const {userstatus} = useSelector(state => state.statusUser);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       header: ({scene}) => {
@@ -30,11 +28,15 @@ const AdminTabBottomNavigation = ({navigation}) => {
   }, []);
   // init
   const Tab = createMaterialBottomTabNavigator();
+  // MYAPP_UPLOAD_STORE_FILE=my-upload-key.keystore
+  // MYAPP_UPLOAD_KEY_ALIAS=my-key-alias
+  // MYAPP_UPLOAD_STORE_PASSWORD=bunga1234
+  // MYAPP_UPLOAD_KEY_PASSWORD=bunga1234
 
   // component
   return (
     <Tab.Navigator
-      barStyle={{backgroundColor: '#030E21'}}
+      barStyle={{backgroundColor: '#353f4e'}}
       tabBarOptions={{
         activeTintColor: '#e91e63',
       }}>

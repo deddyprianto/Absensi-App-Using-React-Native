@@ -1,22 +1,14 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Button,
-  ScrollView,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {CheckBox} from 'react-native-elements';
+import {CheckBox, BottomSheet, Button, ListItem} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
-
+import {useDispatch} from 'react-redux';
+import {saveNameGroup} from '../features/appSlice';
 const AbsenManually = () => {
   // hook
-  const emailUser = useSelector(state => state.loginReducer);
-  const {dataLogin} = emailUser;
+  const dispatch = useDispatch();
   const [namegroup, setNamegroup] = useState('');
   const [show, setShow] = useState(false);
   const [namalengkap, setNamalengkap] = useState('');
@@ -28,6 +20,18 @@ const AbsenManually = () => {
   const [sakit, setSakit] = useState('');
   const [izin, setIzin] = useState('');
   const [alpha, setAlpha] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+  const [dataUser, setDataUser] = useState([]);
+
+  useEffect(() => {
+    firestore()
+      .collection('server')
+      .doc('Im3cRGiZmrQEyunsObeE')
+      .collection(namegroup.length === 0 ? 'data' : namegroup)
+      .onSnapshot(snapshot =>
+        setDataUser(snapshot.docs.map(doc => doc.data())),
+      );
+  }, [namegroup]);
 
   // variable
   const statusHadir = 'hadir';
@@ -45,11 +49,10 @@ const AbsenManually = () => {
   const dotCircleOAlpha = (
     <Icon name="dot-circle-o" color="#FF5050" size={25} />
   );
-
   // function
   const buttonMakeGroup = () => {
     setShow(true);
-    setNamegroup('');
+    dispatch(saveNameGroup(namegroup));
   };
   const absenSekarang = () => {
     firestore()
@@ -67,7 +70,7 @@ const AbsenManually = () => {
             ? izin
             : statusAlpha === alpha
             ? alpha
-            : 'anda tidak memilih opsi status kehadirans',
+            : 'anda tidak memilih opsi status kehadiran',
       });
     setNamalengkap('');
     alert('berhasil, silahkan convert ke file PDF');
@@ -75,18 +78,22 @@ const AbsenManually = () => {
   const tombolHadir = () => {
     setCheckHadir(true);
     setHadir(statusHadir);
+    setNamalengkap('');
   };
   const tombolSakit = () => {
     setCheckSakit(true);
     setSakit(statusSakit);
+    setNamalengkap('');
   };
   const tombolIzin = () => {
     setCheckIzin(true);
     setIzin(statusIzin);
+    setNamalengkap('');
   };
   const tombolAlpha = () => {
     setCheckAlpha(true);
     setAlpha(statusAlpha);
+    setNamalengkap('');
   };
 
   return (
@@ -111,68 +118,127 @@ const AbsenManually = () => {
           </>
         ) : (
           <View style={styles.containerList}>
-            <Text>Nama Grup:{namegroup}</Text>
-            <View style={styles.containerInput}>
-              <TextInput
-                value={namalengkap}
-                onChangeText={value => setNamalengkap(value)}
-                style={styles.input}
-                placeholder="Nama Lengkap"
-                keyboardType="default"
+            <ScrollView style={styles.scroolView}>
+              <Text style={styles.fontText}>Nama Grup:{namegroup}</Text>
+              <View style={styles.containerInput}>
+                <TextInput
+                  value={namalengkap}
+                  onChangeText={value => setNamalengkap(value)}
+                  style={styles.input}
+                  placeholder="Nama Lengkap"
+                  keyboardType="default"
+                />
+              </View>
+              <View style={styles.containerCheckBox}>
+                <Text style={styles.fontText}>
+                  Pilih Kehadiran Anggota Anda
+                </Text>
+                <View style={styles.kontainerCheckbox1}>
+                  <CheckBox
+                    center
+                    title="Hadir"
+                    checkedIcon={dotCircleOHadir}
+                    uncheckedIcon={circleO}
+                    onPress={tombolHadir}
+                    checked={checkHadir}
+                    containerStyle={styles.checkBox}
+                    textStyle={{color: '#eaeaea'}}
+                    uncheckedColor="white"
+                  />
+                  <CheckBox
+                    center
+                    title="Sakit"
+                    checkedIcon={dotCircleOSakit}
+                    uncheckedIcon={circleO}
+                    onPress={tombolSakit}
+                    checked={checkSakit}
+                    containerStyle={styles.checkBox}
+                    textStyle={{color: '#eaeaea'}}
+                    uncheckedColor="white"
+                  />
+                </View>
+                <View style={styles.kontainerCheckbox2}>
+                  <CheckBox
+                    center
+                    title="Izin"
+                    checkedIcon={dotCircleOIzin}
+                    uncheckedIcon={circleO}
+                    onPress={tombolIzin}
+                    checked={checkIzin}
+                    containerStyle={styles.checkBox}
+                    textStyle={{color: '#eaeaea'}}
+                    uncheckedColor="white"
+                  />
+                  <CheckBox
+                    center
+                    title="Alpha"
+                    checkedIcon={dotCircleOAlpha}
+                    uncheckedIcon={circleO}
+                    onPress={tombolAlpha}
+                    checked={checkAlpha}
+                    containerStyle={styles.checkBox}
+                    textStyle={{color: '#eaeaea'}}
+                    uncheckedColor="white"
+                  />
+                </View>
+              </View>
+              <Button
+                icon={<Icon name="eye" size={15} color="#eaeaea" />}
+                iconRight={true}
+                onPress={() => setIsVisible(true)}
+                title="Lihat Data"
+                containerStyle={styles.button}
+                type="outline"
               />
-            </View>
-            <View style={styles.containerCheckBox}>
-              <Text style={styles.fontText}>Pilih Kehadiran</Text>
-              <CheckBox
-                center
-                title="Hadir"
-                checkedIcon={dotCircleOHadir}
-                uncheckedIcon={circleO}
-                onPress={tombolHadir}
-                checked={checkHadir}
-                containerStyle={styles.checkBox}
-                textStyle={{color: '#eaeaea'}}
-                uncheckedColor="white"
+              <Button
+                iconRight={true}
+                icon={<Icon name="paper-plane-o" size={15} color="#eaeaea" />}
+                onPress={absenSekarang}
+                title="Kirim Data"
+                containerStyle={styles.button}
               />
-              <CheckBox
-                center
-                title="Sakit"
-                checkedIcon={dotCircleOSakit}
-                uncheckedIcon={circleO}
-                onPress={tombolSakit}
-                checked={checkSakit}
-                containerStyle={styles.checkBox}
-                textStyle={{color: '#eaeaea'}}
-                uncheckedColor="white"
-              />
-              <CheckBox
-                center
-                title="Izin"
-                checkedIcon={dotCircleOIzin}
-                uncheckedIcon={circleO}
-                onPress={tombolIzin}
-                checked={checkIzin}
-                containerStyle={styles.checkBox}
-                textStyle={{color: '#eaeaea'}}
-                uncheckedColor="white"
-              />
-              <CheckBox
-                center
-                title="Alpha"
-                checkedIcon={dotCircleOAlpha}
-                uncheckedIcon={circleO}
-                onPress={tombolAlpha}
-                checked={checkAlpha}
-                containerStyle={styles.checkBox}
-                textStyle={{color: '#eaeaea'}}
-                uncheckedColor="white"
-              />
-            </View>
-            <Button
-              onPress={absenSekarang}
-              title="Kirim Data"
-              containerStyle={styles.button}
-            />
+
+              <BottomSheet
+                isVisible={isVisible}
+                containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}>
+                {isVisible && (
+                  <>
+                    {dataUser.map((data, i) => (
+                      <View style={styles.containerViewBottomSheet}>
+                        <ScrollView>
+                          <ListItem
+                            bottomDivider
+                            key={i}
+                            containerStyle={styles.bottomContainerStyle}>
+                            <ListItem.Content>
+                              <ListItem.Title>{data.nama}</ListItem.Title>
+                              <ListItem.Subtitle>
+                                {data.status}
+                              </ListItem.Subtitle>
+                              <ListItem.Title>
+                                <Button
+                                  icon={
+                                    <Icon
+                                      name="times-circle"
+                                      size={25}
+                                      color="red"
+                                    />
+                                  }
+                                  title="Tutup"
+                                  type="outlined"
+                                  iconRight={true}
+                                  onPress={() => setIsVisible(false)}
+                                />
+                              </ListItem.Title>
+                            </ListItem.Content>
+                          </ListItem>
+                        </ScrollView>
+                      </View>
+                    ))}
+                  </>
+                )}
+              </BottomSheet>
+            </ScrollView>
           </View>
         )}
       </View>
@@ -198,9 +264,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  fontText: {fontSize: 12, color: '#eaeaea'},
+  fontText: {fontSize: 15, color: '#eaeaea', textAlign: 'center'},
+  kontainerCheckbox1: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  kontainerCheckbox2: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
   checkBox: {
-    width: '70%',
+    width: '40%',
     backgroundColor: 'transparent',
   },
   containerList: {
@@ -221,9 +301,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {height: 40, marginLeft: 10, width: '100%'},
-  button: {width: '50%', margin: 10},
+  button: {width: '50%', margin: 10, alignSelf: 'center'},
   containerCheckBox: {
     width: '100%',
     alignItems: 'center',
+  },
+  itemCheckBox: {
+    width: '70%',
+    backgroundColor: 'transparent',
+  },
+  containerViewBottomSheet: {
+    flex: 1,
+  },
+  bottomContainerStyle: {
+    backgroundColor: 'gray',
+  },
+  scroolView: {
+    marginTop: 50,
   },
 });
