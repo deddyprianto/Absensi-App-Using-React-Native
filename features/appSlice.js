@@ -5,6 +5,10 @@ const initialState = {
   dataLogin: {},
   statusUser: {},
   nameGroup: {},
+  keadaanHadir: {keadaanHadir: false},
+  keadaanSakit: {keadaanSakit: false},
+  keadaanIzin: {keadaanIzin: false},
+  keadaanAlpha: {keadaanAlpha: false},
 };
 export const appSlice = createSlice({
   name: 'appstate',
@@ -19,7 +23,27 @@ export const appSlice = createSlice({
     saveNameGroup: (state, action) => {
       state.nameGroup = action.payload;
     },
+    actionStatusHadir: (state, action) => {
+      state.keadaanHadir = action.payload;
+    },
+    actionStatusSakit: (state, action) => {
+      state.keadaanSakit = action.payload;
+    },
+    actionstatusIzin: (state, action) => {
+      state.keadaanIzin = action.payload;
+    },
+    actionStatusAlpha: (state, action) => {
+      state.keadaanAlpha = action.payload;
+    },
   },
 });
-export const {actionLogin, saveStatusUser, saveNameGroup} = appSlice.actions;
+export const {
+  actionLogin,
+  saveStatusUser,
+  saveNameGroup,
+  actionStatusHadir,
+  actionStatusSakit,
+  actionStatusIzin,
+  actionStatusAlpha,
+} = appSlice.actions;
 export default appSlice.reducer;

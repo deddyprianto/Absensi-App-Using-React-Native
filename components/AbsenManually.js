@@ -1,13 +1,26 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {CheckBox, BottomSheet, Button, ListItem} from 'react-native-elements';
+import {CheckBox, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useDispatch} from 'react-redux';
-import {saveNameGroup} from '../features/appSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  saveNameGroup,
+  actionStatusHadir,
+  actionStatusSakit,
+  actionStatusIzin,
+  actionStatusAlpha,
+} from '../features/appSlice';
 const AbsenManually = () => {
   // hook
+  const {keadaanHadir} = useSelector(state => state.appstate.keadaanHadir);
+  const {keadaanSakit} = useSelector(state => state.appstate.keadaanSakit);
+  const {keadaanIzin} = useSelector(state => state.appstate.keadaanIzin);
+  const {keadaanAlpha} = useSelector(state => state.appstate.keadaanAlpha);
+
   const dispatch = useDispatch();
   const [namegroup, setNamegroup] = useState('');
   const [show, setShow] = useState(false);
@@ -20,19 +33,37 @@ const AbsenManually = () => {
   const [sakit, setSakit] = useState('');
   const [izin, setIzin] = useState('');
   const [alpha, setAlpha] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
-  const [dataUser, setDataUser] = useState([]);
 
   useEffect(() => {
-    firestore()
-      .collection('server')
-      .doc('Im3cRGiZmrQEyunsObeE')
-      .collection(namegroup.length === 0 ? 'data' : namegroup)
-      .onSnapshot(snapshot =>
-        setDataUser(snapshot.docs.map(doc => doc.data())),
-      );
-  }, [namegroup]);
-
+    let dataTimeOut;
+    if (keadaanHadir) {
+      dataTimeOut = setTimeout(() => {
+        dispatch(actionStatusHadir({keadaanHadir: false}));
+        setCheckHadir(false);
+      }, 3000);
+    }
+    if (keadaanIzin) {
+      dataTimeOut = setTimeout(() => {
+        dispatch(actionStatusSakit({keadaanSakit: false}));
+        setCheckSakit(false);
+      }, 3000);
+    }
+    if (keadaanAlpha) {
+      dataTimeOut = setTimeout(() => {
+        dispatch(actionStatusSakit({keadaanSakit: false}));
+        setCheckIzin(false);
+      }, 3000);
+    }
+    if (keadaanSakit) {
+      dataTimeOut = setTimeout(() => {
+        dispatch(actionStatusSakit({keadaanSakit: false}));
+        setCheckAlpha(false);
+      }, 3000);
+    }
+    return () => {
+      clearTimeout(dataTimeOut);
+    };
+  }, [keadaanHadir, keadaanSakit, keadaanIzin, keadaanAlpha]);
   // variable
   const statusHadir = 'hadir';
   const statusSakit = 'sakit';
@@ -75,8 +106,10 @@ const AbsenManually = () => {
     setNamalengkap('');
     alert('berhasil, silahkan convert ke file PDF');
   };
+
   const tombolHadir = () => {
     setCheckHadir(true);
+    dispatch(actionStatusHadir({keadaanHadir: true}));
     setHadir(statusHadir);
     setNamalengkap('');
   };
@@ -106,20 +139,20 @@ const AbsenManually = () => {
                 value={namegroup}
                 onChangeText={value => setNamegroup(value)}
                 style={styles.input}
-                placeholder="Wajib! Masukkan Nama Grup ABSEN"
+                placeholder="Wajib! Masukkan Nama ABSEN"
                 keyboardType="default"
               />
             </View>
             <Button
               onPress={buttonMakeGroup}
-              title="Buat Grup"
+              title="Buat Absen"
               containerStyle={styles.button}
             />
           </>
         ) : (
           <View style={styles.containerList}>
             <ScrollView style={styles.scroolView}>
-              <Text style={styles.fontText}>Nama Grup:{namegroup}</Text>
+              <Text style={styles.fontText}>Nama ABSEN: {namegroup}</Text>
               <View style={styles.containerInput}>
                 <TextInput
                   value={namalengkap}
@@ -183,61 +216,12 @@ const AbsenManually = () => {
                 </View>
               </View>
               <Button
-                icon={<Icon name="eye" size={15} color="#eaeaea" />}
-                iconRight={true}
-                onPress={() => setIsVisible(true)}
-                title="Lihat Data"
-                containerStyle={styles.button}
-                type="outline"
-              />
-              <Button
                 iconRight={true}
                 icon={<Icon name="paper-plane-o" size={15} color="#eaeaea" />}
                 onPress={absenSekarang}
                 title="Kirim Data"
                 containerStyle={styles.button}
               />
-
-              <BottomSheet
-                isVisible={isVisible}
-                containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}>
-                {isVisible && (
-                  <>
-                    {dataUser.map((data, i) => (
-                      <View style={styles.containerViewBottomSheet}>
-                        <ScrollView>
-                          <ListItem
-                            bottomDivider
-                            key={i}
-                            containerStyle={styles.bottomContainerStyle}>
-                            <ListItem.Content>
-                              <ListItem.Title>{data.nama}</ListItem.Title>
-                              <ListItem.Subtitle>
-                                {data.status}
-                              </ListItem.Subtitle>
-                              <ListItem.Title>
-                                <Button
-                                  icon={
-                                    <Icon
-                                      name="times-circle"
-                                      size={25}
-                                      color="red"
-                                    />
-                                  }
-                                  title="Tutup"
-                                  type="outlined"
-                                  iconRight={true}
-                                  onPress={() => setIsVisible(false)}
-                                />
-                              </ListItem.Title>
-                            </ListItem.Content>
-                          </ListItem>
-                        </ScrollView>
-                      </View>
-                    ))}
-                  </>
-                )}
-              </BottomSheet>
             </ScrollView>
           </View>
         )}
